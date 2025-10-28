@@ -21,7 +21,7 @@ public class TabBord extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(voiture.getCouleur());
-        g.fillRect(10, 10, 20, 20);
+        g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.BLACK);
         g.drawString("Carburant : " + voiture.getCarburant(), 40, 25);
         g.drawString("Tours : " + voiture.getTours(), 40, 45);
