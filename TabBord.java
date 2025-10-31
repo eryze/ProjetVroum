@@ -2,19 +2,17 @@ import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class TabBord extends JPanel {
+public class TabBord extends JPanel implements VoitureObserver {
     private Voiture voiture;
 
     public TabBord(Voiture voiture) {
         this.voiture = voiture;
-        
+        voiture.addObserver(this);
     }
 
-    public void setVoiture(Voiture voiture){ 
-        this.voiture = voiture; 
-    }
-    public Voiture getVoiture(){ 
-        return voiture; 
+    @Override
+    public void update() {
+        repaint();
     }
 
     @Override

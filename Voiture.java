@@ -1,11 +1,16 @@
 import java.awt.Color;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Voiture {
     int id;
     Color couleur;
-    int carburant = 60;
+    int carburant;
     int tours = 0;
-    int position;
+    int position = 0;
+    private static List<Point> parcours;
+    private List<VoitureObserver> observers = new ArrayList<>();
 
     public Voiture(int id, Color couleur, int carburant, int tours) {
         this.id = id;
@@ -14,25 +19,44 @@ public class Voiture {
         this.tours = tours;
     }
 
-    public int getId() {
-        return id;
+    public int getPosition() {
+        return position;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public static void setParcours(List<Point> parcours) {
+        Voiture.parcours = parcours;
+    }
+
+    public static List<Point> getParcours() {
+        return parcours;
+    }
+
+    public Point getCoordGrille() {
+        return parcours.get(position);
+    }
+
+    void addObserver(VoitureObserver observer) {
+        observers.add(observer);
+    }
+
+    void notifyObservers() {
+        for (VoitureObserver observer : observers) {
+            observer.update();
+        }
+    }
+
+    public int getCarburant() {
+        return carburant;
     }
 
     public Color getCouleur() {
         return couleur;
     }
 
-    public void setCouleur(Color couleur) {
-        this.couleur = couleur;
+    public int getId() {
+        return id;
     }
 
-    public int getCarburant() {
-        return carburant;
-    }
     public int getTours() {
         return tours;
     }
@@ -46,23 +70,18 @@ public class Voiture {
     public void toMove() {
         int avancer = (int) (Math.random() * 6) + 1;
         if (carburant > 1) {
-            position += avancer;
-            System.out.println("La voiture " + id + " avance !");
+            int temps = position;
+            position = (position + avancer) % parcours.size();
+            if (temps + avancer >= parcours.size()) {
+                tours++;
+            }
             consommerCarburant();
-        } 
-        if (position >= 100) {
-            tours += 1;
-            position = 0;
-            System.out.println("La voiture " + id + " a fait un tour !");
-
+            notifyObservers();
         }
-        if (carburant == 1 || carburant == 0) {
+        if (carburant == 1 || carburant == 0)
             System.out.println("La voiture " + id + " n'a plus de carburant et ne peut plus avancer !");
-
-        }
-        if (tours==3) {
+        if (tours == 3) {
             System.out.println("La voiture " + id + " a gagné la course !");
-            carburant = 0;
         }
 
     }
